@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/text-to-speech": "^4.2.2",
     "discord.js": "^14.9.0",
     "dotenv": "^16.0.3",
     "wokcommands": "^2.1.0"

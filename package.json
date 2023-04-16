@@ -1,7 +1,7 @@
 {
   "name": "jadebot",
   "version": "1.0.0",
-  "description": "",
+  "description": "To run this on your own machine - do the following:",
   "main": "src/jadebot.js",
   "scripts": {
     "test": "node ."
@@ -9,9 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/voice": "^0.16.0",
     "@google-cloud/text-to-speech": "^4.2.2",
     "discord.js": "^14.9.0",
     "dotenv": "^16.0.3",
+    "ffmpeg-static": "^5.1.0",
+    "libsodium-wrappers": "^0.7.11",
     "wokcommands": "^2.1.0"
-  }
+  },
+  "keywords": []
 }

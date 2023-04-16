@@ -1,7 +1,14 @@
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, StreamType } = require("@discordjs/voice");
+const {
+  joinVoiceChannel,
+  createAudioPlayer,
+  createAudioResource,
+  StreamType,
+  VoiceConnectionStatus,
+  AudioPlayerStatus,
+} = require("@discordjs/voice");
 const { SlashCommandBuilder } = require("discord.js");
-const { join } = require('node:path');
-const { createReadStream } = require('node:fs');
+const { join } = require("node:path");
+const { createReadStream } = require("node:fs");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,34 +19,38 @@ module.exports = {
       fetchReply: true,
     });
 
-    //console.log(generateDependencyReport());
     if (interaction.member.voice.channel) {
       try {
-        
         const player = createAudioPlayer();
-        //let resource = createAudioResource(createReadStream(join()`huh.mp3`));
-        const resource = createAudioResource(createReadStream(join(__dirname, 'huh.mp3'), {
-          inputType: StreamType.OggOpus,
-        }));
-
         const voiceConnection = joinVoiceChannel({
           channelId: interaction.member.voice.channelId,
           guildId: interaction.guildId,
           adapterCreator: interaction.guild.voiceAdapterCreator,
         });
 
-        player.play(resource);
+        voiceConnection.on(VoiceConnectionStatus.Ready, () => {
+          const resource = createAudioResource(
+            createReadStream(join(__dirname, "../../../media/jdaebot.mp3"), {
+              inputType: StreamType.OggOpus,
+            })
+          );
+          player.play(resource);
+        });
+
         const sub = voiceConnection.subscribe(player);
         if (sub) {
-          console.log("successfully subscribed!")
+          console.log("successfully subscribed!");
         }
-        
+
+        player.on(AudioPlayerStatus.Idle, () => {
+          setTimeout(() => {
+            voiceConnection.disconnect();
+          }, 3000);
+        });
+
         await interaction.editReply({
           content: `I'm connected to **${interaction.member.voice.channel.name}!**`,
         });
-
-        voiceConnection.disconnect();
-
 
       } catch (error) {
         console.log(error);
